@@ -1,0 +1,9 @@
+[tool]
+# uv specific configuration
+python-version = "3.12"
+resolution-mode = "highest"
+
+[venv]
+# Virtual environment configuration
+path = ".uvenv"
+prompt = "snd-project"
