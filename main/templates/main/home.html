@@ -1,0 +1,45 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <div class="section">
+        <h2>Devinとは？</h2>
+        <p>Devinは開発者向けのAIアシスタントで、コーディング、バグ修正、リファクタリングなどの開発タスクを支援します。Slackなどのプラットフォームで@Devinをメンションするだけで、様々な開発タスクを依頼できます。</p>
+    </div>
+
+    <div class="section">
+        <h2>主な機能</h2>
+        {% for feature in features %}
+            <div class="feature">
+                <h3>{{ feature.title }}</h3>
+                <p>{{ feature.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>効果的な使い方のヒント</h2>
+        <ol class="tips-list">
+            {% for tip in usage_tips %}
+                <li>{{ tip }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>使用例</h2>
+        {% for example in examples %}
+            <div class="example">
+                <h3>{{ example.title }}</h3>
+                <p>{{ example.description }}</p>
+                {% if example.code_example %}
+                    <pre><code>{{ example.code_example }}</code></pre>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>詳細情報</h2>
+        <p>より詳しい使い方については、<a href="https://docs.devin.ai/essential-guidelines/instructing-devin-effectively" target="_blank">公式ドキュメント</a>をご覧ください。</p>
+    </div>
+{% endblock %}
