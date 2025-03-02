@@ -1,24 +1,28 @@
 # Devin使用方法説明アプリ
 
 このプロジェクトはDevinの使い方を日本語で説明するためのDjangoウェブアプリケーションです。
-
+https://zenn.dev/turing_motors/articles/594fbef42a36ee
+上記参照にして修正
 ## セットアップ方法 (uvを使用)
 
 ```bash
 # uvをインストール
 pip install uv
 
-# 仮想環境を作成
-uv venv .uvenv
+# パッケージの同期
+uv sync
 
 # 仮想環境を有効化
-source .uvenv/bin/activate
+. .venv/bin/activate
 
-# 依存関係をインストール
-uv pip install -e .
+# 無効化
+deactivate
 
-# 開発用依存関係をインストール (オプション)
-uv pip install -e ".[dev]"
+# # 依存関係をインストール
+# uv pip install -e .
+
+# # 開発用依存関係をインストール (オプション)
+# uv pip install -e ".[dev]"
 
 # または、セットアップスクリプトを使用
 ./uvenv.sh
@@ -36,7 +40,7 @@ python manage.py runserver
 
 ```bash
 # プロジェクト依存関係を更新
-uv pip install -e .
+uv sync
 
 # または開発用依存関係を更新
 uv pip install -e ".[dev]"
