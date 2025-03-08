@@ -1,0 +1,133 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Polarsデータフレーム検索デモ</h1>
+    
+    <div class="card mb-5">
+        <div class="card-header">
+            <h2 class="h5 mb-0">検索フォーム</h2>
+        </div>
+        <div class="card-body">
+            <form method="get" action="{% url 'polars_search_demo' %}">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="query" class="form-label">検索キーワード</label>
+                        <input type="text" class="form-control" id="query" name="q" value="{{ query }}" placeholder="検索キーワードを入力">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="department" class="form-label">部署</label>
+                        <select class="form-select" id="department" name="department">
+                            <option value="">全ての部署</option>
+                            {% for dept in departments %}
+                                <option value="{{ dept }}" {% if department == dept %}selected{% endif %}>{{ dept }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="min_rating" class="form-label">最小評価</label>
+                        <input type="number" class="form-control" id="min_rating" name="min_rating" value="{{ min_rating }}" placeholder="最小評価" step="0.1" min="0" max="5">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="case_sensitive" name="case_sensitive" {% if case_sensitive %}checked{% endif %}>
+                            <label class="form-check-label" for="case_sensitive">
+                                大文字小文字を区別する
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="match_all" name="match_all" {% if match_all %}checked{% endif %}>
+                            <label class="form-check-label" for="match_all">
+                                全てのキーワードに一致（スペース区切りで複数キーワード）
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">検索</button>
+            </form>
+        </div>
+    </div>
+    
+    {% if results %}
+        <div class="card">
+            <div class="card-header">
+                <h2 class="h5 mb-0">検索結果 ({{ results|length }}件)</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>名前</th>
+                                <th>部署</th>
+                                <th>スキル</th>
+                                <th>評価</th>
+                                <th>ステータス</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in results %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.department }}</td>
+                                <td>{{ item.skills }}</td>
+                                <td>{{ item.rating }}</td>
+                                <td>{% if item.active %}有効{% else %}無効{% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% elif query or department or min_rating %}
+        <div class="alert alert-info">
+            検索結果はありませんでした。
+        </div>
+    {% endif %}
+    
+    <div class="card mt-5">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Polars検索機能の説明</h2>
+        </div>
+        <div class="card-body">
+            <h3 class="h6">基本的な検索機能</h3>
+            <p>Polarsデータフレームを使用した検索機能は、以下の特徴があります：</p>
+            <ul>
+                <li>複数列での検索（名前、部署、スキルなど）</li>
+                <li>大文字小文字を区別しない検索（オプションで区別も可能）</li>
+                <li>複数キーワードでの検索（AND/OR条件）</li>
+                <li>数値範囲での検索（評価など）</li>
+                <li>フィルタリングとの組み合わせ（部署など）</li>
+            </ul>
+            
+            <h3 class="h6">実装例</h3>
+            <pre><code>
+# 基本的な検索
+result = search_dataframe(df, '営業')
+
+# 特定の列のみを検索
+result = search_dataframe(df, 'Python', columns=['skills'])
+
+# 複数キーワードでの検索（OR条件）
+result = search_with_multiple_keywords(df, ['Python', '営業'])
+
+# 複数キーワードでの検索（AND条件）
+result = search_with_multiple_keywords(df, ['Python', '開発'], match_all=True)
+
+# 高度なフィルタリングと検索の組み合わせ
+result = advanced_search(df, query='Python', filters={'department': '開発部'})
+
+# 数値範囲での検索
+result = search_numeric_range(df, 'rating', min_value=4.0)
+            </code></pre>
+        </div>
+    </div>
+</div>
+{% endblock %}
